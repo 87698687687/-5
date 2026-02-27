@@ -1,0 +1,114 @@
+# Ячейка кода
+import random
+import string
+
+def generate_password(length, use_letters=True, use_digits=True, use_special=True):
+  """
+  Генерирует безопасный пароль заданной длины с указанными типами символов.
+  """
+  characters = ""
+  if use_letters:
+    characters += string.ascii_letters  # a-z, A-Z
+  if use_digits:
+    characters += string.digits         # 0-9
+  if use_special:
+    characters += string.punctuation    # !@#$%^&*()...
+
+  if not characters:
+    return "Ошибка: Не выбраны типы символов для пароля."
+
+  password = ''.join(random.choice(characters) for _ in range(length))
+  return password
+
+def check_password_strength(password):
+  """
+  Проверяет сложность пароля (базовая проверка).
+  """
+  length = len(password)
+  has_letters = any(c.isalpha() for c in password)
+  has_digits = any(c.isdigit() for c in password)
+  has_special = any(c in string.punctuation for c in password)
+
+  strength = 0
+  if length >= 8: strength += 1
+  if has_letters: strength += 1
+  if has_digits: strength += 1
+  if has_special: strength += 1
+
+  if strength == 4:
+    return "Очень сильный"
+  elif strength == 3:
+    return "Сильный"
+  elif strength == 2:
+    return "Средний"
+  else:
+    return "Слабый"
+
+# --- Настройки генерации ---
+try:
+  password_length = int(input("Введите желаемую длину пароля: "))
+  num_passwords = int(input("Сколько паролей сгенерировать? "))
+
+  use_letters_input = input("Использовать буквы? (да/нет): ").lower()
+  use_letters = use_letters_input == 'да'
+
+  use_digits_input = input("Использовать цифры? (да/нет): ").lower()
+  use_digits = use_digits_input == 'да'
+
+  use_special_input = input("Использовать специальные символы? (да/нет): ").lower()
+  use_special = use_special_input == 'да'
+
+  if not (use_letters or use_digits or use_special):
+      print("Ошибка: Необходимо выбрать хотя бы один тип символов.")
+  else:
+      print("\n--- Сгенерированные пароли ---")
+      for i in range(num_passwords):
+        password = generate_password(password_length, use_letters, use_digits, use_special)
+        if "Ошибка" in password:
+            print(password)
+            break
+        strength = check_password_strength(password)
+        print(f"Пароль {i+1}: {password} (Сложность: {strength})")
+
+except ValueError:
+  print("Ошибка: Введено некорректное число для длины или количества паролей.")
+except Exception as e:
+  print(f"Произошла ошибка: {e}")
+
+
+
+
+
+# Ячейка кода
+
+def calculate(num1, operator, num2):
+  """
+  Выполняет математическую операцию над двумя числами
+  в зависимости от введенного оператора.
+  """
+  if operator == '+':
+    return num1 + num2
+  elif operator == '-':
+    return num1 - num2
+  elif operator == '*':
+    return num1 * num2
+  elif operator == '/':
+    if num2 == 0:
+      return "Ошибка: Деление на ноль!"
+    else:
+      return num1 / num2
+  else:
+    return "Ошибка: Неверный оператор!"
+
+# Получаем ввод от пользователя
+try:
+  num1 = float(input("Введите первое число: "))
+  operator = input("Введите оператор (+, -, *, /): ")
+  num2 = float(input("Введите второе число: "))
+
+  # Вычисляем и выводим результат
+  result = calculate(num1, operator, num2)
+  print(f"Результат: {result}")
+
+except ValueError:
+  print("Ошибка: Введено некорректное число.")
